@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<style>
+		*{
+			margin: 0;padding:0;
+		}
+		#wrap{
+			width: 350px;
+			margin: 10px auto;
+		}
+		#show{
+			width: 350px;
+			height: 50px;
+			text-align: center;
+			margin: 10px auto;
+			border: 8px solid #dedede;
+			line-height: 66px;
+		}
+
+	</style>
+</head>
+<body>
+	<div id="show"><img src="img/1.png" id="showImg"></div>
+	<div id="wrap">
+		<canvas id="cvs" name"cvs" width="350" height="350" style="border:1px solid red;">
+			你使用的浏览器不支持canvas
+		</canvas>
+	</div>
+	<script>
+		var cvs = document.getElementById('cvs');
+		var showImg = document.getElementById('showImg');
+		var ctx = cvs.getContext('2d');
+
+		var data = [];
+		var datb=[];
+
+		var imgArr = ['img/1.png','img/2.png','img/3.png','img/4.png'];
+		var randomNum = Math.ceil(Math.random()*imgArr.length);
+		// console.log(randomNum);
+		showImg.src = "img/"+randomNum+".png";
+
+		for(var i=1; i<5; i++){
+			data[i] = new Image();
+			data[i].src = "img/"+i+".png";
+		}
+		for (var i = 1; i < 5; i++) {
+            datb[i] = new Image();
+            datb[i].src = "img/" + (i + 10) + ".png";
+        }
+
+		window.onload=function(){
+			var drawData = [];
+			var drawDatb = [];
+			for(var i=0; i<14; i++){
+				for(var j=0; j<14; j++) {
+					var n = Math.round(Math.random() * 3 + 1);
+					drawData.push({
+						num:n,
+						obj:data[n],
+						x:i*25,
+						y:j*25
+					});
+					ctx.drawImage(data[n],i*25,j*25);
+				}	
+			}
+			for (var i = 0; i < 7; i++) {
+                for (var j = 0; j < 7; j++) {
+                    var n = Math.round(Math.random() *3 + 1);
+                    var _n=Math.round(Math.random() *99 + 1);
+                    if(_n%3==0) {
+                    	drawDatb.push({
+                    		num:n,
+							obj:datb[n],
+							x:j*50,
+							y:i*50
+                    	});
+                        ctx.clearRect(50 * j,50 * i ,50,50);
+                        ctx.drawImage(datb[n], 50 * j, 50 * i);
+                    }
+                }
+            }
+
+			var drawDatc = drawData.concat(drawDatb);
+			// console.log(a.length);
+			cvs.onclick=function (e){
+
+				var imgSelected = new Image();
+				var x=e.clientX-cvs.offsetLeft;
+				var y=e.clientY-cvs.offsetTop;
+				
+				
+
+				for(var i=0;i<drawDatc.length;i++) {
+					ctx.beginPath();
+					if(i<drawData.length){
+						ctx.rect(drawData[i].x,drawData[i].y,25,25);
+					}else{
+						
+						ctx.rect(drawDatc[i].x,drawDatc[i].y,50,50);
+					}
+					if(ctx.isPointInPath(x,y)){
+						
+						if(i<drawData.length){
+							if(drawDatc[i].num == randomNum){
+
+								imgSelected.src = "img/"+randomNum+"c.png";
+								ctx.drawImage(imgSelected,drawDatc[i].x,drawDatc[i].y,25,25);
+								
+									
+								
+							}
+							
+						}else{
+							if(drawDatc[i].num == randomNum){
+								imgSelected.src = "img/1"+randomNum+"c.png";
+						        // ctx.clearRect(drawDatc[i].x,drawDatc[i].y,50,50);
+								
+								ctx.drawImage(imgSelected,drawDatc[i].x,drawDatc[i].y,50,50);
+							}else{
+						        ctx.clearRect(drawDatc[i].x,drawDatc[i].y,50,50);
+								imgSelected.src = "img/1"+drawDatc[i].num+".png";
+
+								ctx.drawImage(imgSelected,drawDatc[i].x,drawDatc[i].y,50,50);
+
+
+							}
+						}
+						
+					}
+				}
+			}
+		}
+	</script>
+</body>
+</html>
+
+
+
+
+<!-- // for(var i=0;i<drawData.length;i++) {
+				// 	ctx.beginPath();
+				// 	ctx.rect(drawData[i].x,drawData[i].y,25,25);
+				// 	if(ctx.isPointInPath(x,y)){
+				// 		if(drawData[i].num == randomNum){
+				// 			imgSelected.src = "img/"+randomNum+"c.png";
+				// 			ctx.drawImage(imgSelected,drawData[i].x,drawData[i].y,25,25);
+				// 		}
+				// 	}
+				// }
+				// for(var i=0;i<drawDatb.length;i++) {
+				// 	ctx.beginPath();
+				// 	ctx.rect(drawDatb[i].x,drawDatb[i].y,50,50);
+				// 	if(ctx.isPointInPath(x,y)){
+				// 		if(drawDatb[i].num == randomNum){
+				// 			imgSelected.src = "img/1"+randomNum+".png";
+				// 			ctx.clearRect(imgSelected,drawDatb[i].x,drawDatb[i].y,50,50)
+				// 			ctx.drawImage(imgSelected,drawDatb[i].x,drawDatb[i].y,50,50);
+				// 		}
+				// 	}
+				// } -->
